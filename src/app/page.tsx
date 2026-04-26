@@ -6,6 +6,7 @@ import {
   useScroll,
   useTransform,
   useSpring,
+  AnimatePresence,
 } from "framer-motion";
 
 /* ─── Data ────────────────────────────────────────────────────── */
@@ -45,6 +46,14 @@ const HOURS = [
   { day: "Saturday — Sunday", time: "9 am — 4 pm", note: "Brunch all day" },
 ];
 
+const NAV_LINKS = [
+  { href: "#about", label: "About" },
+  { href: "#menu", label: "Menu" },
+  { href: "#space", label: "The Space" },
+  { href: "#visit", label: "Visit" },
+  { href: "https://www.instagram.com/babygirl.atl/", label: "Instagram", external: true },
+];
+
 /* ─── Fade-in wrapper ─────────────────────────────────────────── */
 function Reveal({
   children,
@@ -76,18 +85,16 @@ function ScrollProgress() {
     <motion.div
       style={{ scaleX, transformOrigin: "0%" }}
       className="fixed top-16 left-0 right-0 h-[2px] z-50"
-      // chartreuse progress line sits right below the nav
     >
       <div className="w-full h-full bg-[#C5D63D]" />
     </motion.div>
   );
 }
 
-/* ─── Ambient light orbs — like stained glass light on walls ──── */
+/* ─── Ambient light orbs ─────────────────────────────────────── */
 function AmbientOrbs() {
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-      {/* Chartreuse orb — top right, slow drift */}
       <div
         className="absolute w-[500px] h-[500px] rounded-full opacity-[0.04]"
         style={{
@@ -97,7 +104,6 @@ function AmbientOrbs() {
           animation: "orbDrift1 20s ease-in-out infinite",
         }}
       />
-      {/* Amber orb — mid left */}
       <div
         className="absolute w-[600px] h-[600px] rounded-full opacity-[0.035]"
         style={{
@@ -107,7 +113,6 @@ function AmbientOrbs() {
           animation: "orbDrift2 25s ease-in-out infinite",
         }}
       />
-      {/* Warm red orb — bottom right */}
       <div
         className="absolute w-[400px] h-[400px] rounded-full opacity-[0.03]"
         style={{
@@ -137,21 +142,10 @@ function AmbientOrbs() {
   );
 }
 
-/* ─── Photo card with parallax + staggered scroll animation ──── */
-function PhotoCard({
-  src,
-  alt,
-  index,
-}: {
-  src: string;
-  alt: string;
-  index: number;
-}) {
+/* ─── Photo card with parallax ───────────────────────────────── */
+function PhotoCard({ src, alt, index }: { src: string; alt: string; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [30, -30]);
 
   return (
@@ -160,11 +154,7 @@ function PhotoCard({
       initial={{ opacity: 0, y: 60, scale: 0.95 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, margin: "-80px" }}
-      transition={{
-        duration: 0.8,
-        ease: [0.22, 1, 0.36, 1],
-        delay: index * 0.15,
-      }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: index * 0.15 }}
       className="aspect-[4/3] rounded-2xl overflow-hidden"
     >
       <motion.img
@@ -177,13 +167,10 @@ function PhotoCard({
   );
 }
 
-/* ─── Parallax image — used for larger standalone photos ──────── */
+/* ─── Parallax image ─────────────────────────────────────────── */
 function ParallaxImage({ src, alt }: { src: string; alt: string }) {
   const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [40, -40]);
 
   return (
@@ -195,39 +182,24 @@ function ParallaxImage({ src, alt }: { src: string; alt: string }) {
       transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
       className="relative aspect-[4/3] rounded-2xl overflow-hidden"
     >
-      <motion.img
-        style={{ y }}
-        src={src}
-        alt={alt}
-        className="w-[100%] h-[120%] object-cover"
-      />
+      <motion.img style={{ y }} src={src} alt={alt} className="w-[100%] h-[120%] object-cover" />
     </motion.div>
   );
 }
 
 /* ─── Menu item row ──────────────────────────────────────────── */
-function MenuItem({
-  item,
-  index,
-}: {
-  item: { name: string; price: number; desc?: string };
-  index: number;
-}) {
+function MenuItem({ item, index }: { item: { name: string; price: number; desc?: string }; index: number }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
-      transition={{
-        duration: 0.5,
-        ease: [0.22, 1, 0.36, 1],
-        delay: index * 0.05,
-      }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: index * 0.05 }}
       className="group"
     >
       <div className="flex items-baseline justify-between gap-4 py-5 border-b border-[#e8e4df] transition-colors duration-300 group-hover:border-[#C5D63D]">
         <div className="flex-1 min-w-0">
-          <h3 className="text-[clamp(16px,1.4vw,20px)] font-medium text-[#1a1a1a] tracking-[-0.01em] transition-colors">
+          <h3 className="text-[clamp(16px,1.4vw,20px)] font-medium text-[#1a1a1a] tracking-[-0.01em]">
             {item.name}
           </h3>
           {item.desc && (
@@ -237,7 +209,7 @@ function MenuItem({
           )}
         </div>
         <span className="text-[clamp(14px,1.2vw,18px)] font-light text-[#1a1a1a] tabular-nums shrink-0">
-          {item.price}
+          ${item.price}
         </span>
       </div>
     </motion.div>
@@ -255,18 +227,38 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
+/* ─── Hamburger icon ─────────────────────────────────────────── */
+function HamburgerIcon({ open }: { open: boolean }) {
+  return (
+    <div className="w-6 h-5 relative flex flex-col justify-between">
+      <motion.span
+        animate={open ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
+        className="block w-full h-[1.5px] bg-[#1a1a1a] origin-center"
+        transition={{ duration: 0.3 }}
+      />
+      <motion.span
+        animate={open ? { opacity: 0 } : { opacity: 1 }}
+        className="block w-full h-[1.5px] bg-[#1a1a1a]"
+        transition={{ duration: 0.2 }}
+      />
+      <motion.span
+        animate={open ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }}
+        className="block w-full h-[1.5px] bg-[#1a1a1a] origin-center"
+        transition={{ duration: 0.3 }}
+      />
+    </div>
+  );
+}
+
 /* ─── Main Page ──────────────────────────────────────────────── */
 export default function BabygirlPage() {
   const [menuTab, setMenuTab] = useState<"brunch" | "pm" | "drinks">("brunch");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
   const heroY = useTransform(scrollYProgress, [0, 0.8], [0, -60]);
 
-  /* Time-based greeting */
   const [greeting, setGreeting] = useState("Good morning");
   useEffect(() => {
     const h = new Date().getHours();
@@ -274,21 +266,20 @@ export default function BabygirlPage() {
     else if (h >= 17) setGreeting("Good evening");
   }, []);
 
-  const activeMenu =
-    menuTab === "brunch"
-      ? BRUNCH_MENU
-      : menuTab === "pm"
-        ? PM_MENU
-        : DRINKS;
+  // Close mobile menu on scroll
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const close = () => setMobileMenuOpen(false);
+    window.addEventListener("scroll", close, { passive: true });
+    return () => window.removeEventListener("scroll", close);
+  }, [mobileMenuOpen]);
+
+  const activeMenu = menuTab === "brunch" ? BRUNCH_MENU : menuTab === "pm" ? PM_MENU : DRINKS;
 
   return (
     <div
-      className="min-h-screen"
-      style={{
-        background: "#FAF8F5",
-        color: "#1a1a1a",
-        fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-      }}
+      className="min-h-screen relative"
+      style={{ background: "#FAF8F5", color: "#1a1a1a", fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }}
     >
       <ScrollProgress />
       <AmbientOrbs />
@@ -301,41 +292,68 @@ export default function BabygirlPage() {
         className="fixed top-0 inset-x-0 z-50 backdrop-blur-md bg-[#FAF8F5]/80 border-b border-[#e8e4df]/60"
       >
         <div className="max-w-[1400px] mx-auto px-6 sm:px-10 h-16 flex items-center justify-between">
-          <a
-            href="#top"
-            className="text-[18px] font-medium tracking-[-0.02em] text-[#1a1a1a]"
-          >
+          <a href="#top" className="text-[18px] font-medium tracking-[-0.02em] text-[#1a1a1a]">
             babygirl
           </a>
-          <div className="hidden sm:flex items-center gap-8 text-[13px] font-normal text-[#8a8580]">
-            <a href="#about" className="hover:text-[#1a1a1a] transition-colors duration-300">
-              About
-            </a>
-            <a href="#menu" className="hover:text-[#1a1a1a] transition-colors duration-300">
-              Menu
-            </a>
-            <a href="#space" className="hover:text-[#1a1a1a] transition-colors duration-300">
-              The Space
-            </a>
-            <a href="#visit" className="hover:text-[#1a1a1a] transition-colors duration-300">
-              Visit
-            </a>
-            <a
-              href="https://www.instagram.com/babygirl.atl/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-[#1a1a1a] transition-colors duration-300"
-            >
-              Instagram
-            </a>
+
+          {/* Desktop nav */}
+          <div className="hidden md:flex items-center gap-8 text-[13px] font-normal text-[#8a8580]">
+            {NAV_LINKS.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                target={link.external ? "_blank" : undefined}
+                rel={link.external ? "noopener noreferrer" : undefined}
+                className="hover:text-[#1a1a1a] transition-colors duration-300"
+              >
+                {link.label}
+              </a>
+            ))}
           </div>
-          <a
-            href="tel:+14045499692"
-            className="sm:hidden text-[13px] font-normal text-[#8a8580]"
+
+          {/* Mobile hamburger */}
+          <button
+            onClick={() => setMobileMenuOpen((v) => !v)}
+            className="md:hidden p-2 -mr-2 min-h-[44px] min-w-[44px] flex items-center justify-center"
+            aria-label="Toggle menu"
           >
-            Call
-          </a>
+            <HamburgerIcon open={mobileMenuOpen} />
+          </button>
         </div>
+
+        {/* Mobile dropdown */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="md:hidden overflow-hidden bg-[#FAF8F5]/95 backdrop-blur-md border-b border-[#e8e4df]"
+            >
+              <div className="px-6 py-4 flex flex-col gap-1">
+                {NAV_LINKS.map((link) => (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    target={link.external ? "_blank" : undefined}
+                    rel={link.external ? "noopener noreferrer" : undefined}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="py-3 text-[16px] text-[#1a1a1a] font-normal border-b border-[#e8e4df]/50 last:border-0"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+                <a
+                  href="tel:+14045499692"
+                  className="mt-2 py-3 text-[16px] font-medium text-[#9a8c5a]"
+                >
+                  Call (404) 549-9692
+                </a>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.nav>
 
       {/* ─── Hero ─────────────────────────────────────────── */}
@@ -352,10 +370,7 @@ export default function BabygirlPage() {
           />
           <div
             className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.35) 40%, rgba(0,0,0,0.05) 100%)",
-            }}
+            style={{ background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.35) 40%, rgba(0,0,0,0.05) 100%)" }}
           />
         </div>
 
@@ -367,7 +382,7 @@ export default function BabygirlPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-[clamp(12px,1vw,14px)] font-normal text-white/60 tracking-[0.2em] uppercase mb-6"
+            className="text-[clamp(12px,1vw,14px)] font-normal text-white/60 tracking-[0.2em] uppercase mb-4 sm:mb-6"
           >
             East Lake, Atlanta
           </motion.p>
@@ -376,7 +391,7 @@ export default function BabygirlPage() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="text-[clamp(48px,8vw,140px)] font-light leading-[0.9] tracking-[-0.04em] text-white mb-8"
+            className="text-[clamp(56px,10vw,140px)] font-light leading-[0.9] tracking-[-0.04em] text-white mb-6 sm:mb-8"
           >
             babygirl
           </motion.h1>
@@ -395,13 +410,15 @@ export default function BabygirlPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.9 }}
-            className="flex flex-wrap items-center gap-6 mt-10 text-[13px] text-white/50"
+            className="flex flex-wrap items-center gap-3 sm:gap-6 mt-8 sm:mt-10 text-[13px] text-white/50"
           >
             <span>Open daily 9 am — 4 pm</span>
-            <span className="w-1 h-1 rounded-full bg-[#C5D63D]" />
-            <span>East Lake</span>
-            <span className="w-1 h-1 rounded-full bg-[#C5D63D]" />
-            <span>(404) 549-9692</span>
+            <span className="w-1 h-1 rounded-full bg-[#C5D63D] hidden sm:block" />
+            <span className="hidden sm:inline">East Lake</span>
+            <span className="w-1 h-1 rounded-full bg-[#C5D63D] hidden sm:block" />
+            <a href="tel:+14045499692" className="text-white/70 hover:text-white transition-colors">
+              (404) 549-9692
+            </a>
           </motion.div>
         </motion.div>
 
@@ -422,25 +439,13 @@ export default function BabygirlPage() {
       {/* ─── Photo Strip ─────────────────────────────────── */}
       <section
         className="px-6 sm:px-10"
-        style={{ paddingTop: "clamp(60px, 8vw, 120px)", paddingBottom: "clamp(40px, 5vw, 80px)" }}
+        style={{ paddingTop: "clamp(48px, 8vw, 120px)", paddingBottom: "clamp(32px, 5vw, 80px)" }}
       >
         <div className="max-w-[1400px] mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <PhotoCard
-              src="/images/hero-spread.jpg"
-              alt="Chicken and waffles with braised greens, granola yogurt bowl with fresh raspberries"
-              index={0}
-            />
-            <PhotoCard
-              src="/images/waffle-window.png"
-              alt="Belgian waffle with strawberries bathed in golden stained glass light"
-              index={1}
-            />
-            <PhotoCard
-              src="/images/salmon-egg-bowl.png"
-              alt="Smoked salmon and fried egg over hashbrowns with chives and capers"
-              index={2}
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+            <PhotoCard src="/images/hero-spread.jpg" alt="Chicken and waffles with braised greens, granola yogurt bowl with fresh raspberries" index={0} />
+            <PhotoCard src="/images/waffle-window.png" alt="Belgian waffle with strawberries bathed in golden stained glass light" index={1} />
+            <PhotoCard src="/images/salmon-egg-bowl.png" alt="Smoked salmon and fried egg over hashbrowns with chives and capers" index={2} />
           </div>
         </div>
       </section>
@@ -449,14 +454,14 @@ export default function BabygirlPage() {
       <section
         id="about"
         className="relative px-6 sm:px-10"
-        style={{ paddingTop: "clamp(80px, 10vw, 160px)", paddingBottom: "clamp(80px, 10vw, 160px)" }}
+        style={{ paddingTop: "clamp(64px, 10vw, 160px)", paddingBottom: "clamp(64px, 10vw, 160px)" }}
       >
         <div className="max-w-[1400px] mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-16 lg:gap-24 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-10 lg:gap-24 items-start">
             <div>
               <SectionLabel>About</SectionLabel>
               <Reveal delay={0.1}>
-                <h2 className="text-[clamp(28px,3.5vw,52px)] font-light leading-[1.1] tracking-[-0.03em] text-[#1a1a1a]">
+                <h2 className="text-[clamp(32px,3.5vw,52px)] font-light leading-[1.1] tracking-[-0.03em] text-[#1a1a1a]">
                   Good food.
                   <br />
                   <span style={{ color: "#9a8c5a" }}>Real vibes.</span>
@@ -493,17 +498,11 @@ export default function BabygirlPage() {
               </Reveal>
 
               <Reveal delay={0.5}>
-                <div className="flex flex-wrap gap-3 mt-8">
-                  {[
-                    "Michelin-recognized chef",
-                    "Farm-to-table",
-                    "Seasonal menu",
-                    "Natural wine + cocktails",
-                    "Free parking",
-                  ].map((tag) => (
+                <div className="flex flex-wrap gap-2 sm:gap-3 mt-8">
+                  {["Michelin-recognized chef", "Farm-to-table", "Seasonal menu", "Natural wine + cocktails", "Free parking"].map((tag) => (
                     <span
                       key={tag}
-                      className="px-4 py-2 text-[12px] font-medium tracking-[0.05em] text-[#5a5550] border border-[#ddd6ce] rounded-full bg-[#f5f0ea]"
+                      className="px-3 sm:px-4 py-2 text-[11px] sm:text-[12px] font-medium tracking-[0.05em] text-[#5a5550] border border-[#ddd6ce] rounded-full bg-[#f5f0ea]"
                     >
                       {tag}
                     </span>
@@ -518,15 +517,11 @@ export default function BabygirlPage() {
       {/* ─── Pull Quote ──────────────────────────────────── */}
       <section
         className="relative px-6 sm:px-10"
-        style={{
-          paddingTop: "clamp(60px, 8vw, 120px)",
-          paddingBottom: "clamp(60px, 8vw, 120px)",
-          background: "#f0ece7",
-        }}
+        style={{ paddingTop: "clamp(48px, 8vw, 120px)", paddingBottom: "clamp(48px, 8vw, 120px)", background: "#f0ece7" }}
       >
         <div className="max-w-[900px] mx-auto text-center">
           <Reveal>
-            <blockquote className="text-[clamp(22px,3vw,40px)] font-light leading-[1.3] tracking-[-0.02em] text-[#2a2520]">
+            <blockquote className="text-[clamp(20px,3vw,40px)] font-light leading-[1.3] tracking-[-0.02em] text-[#2a2520]">
               &ldquo;The space is really well done and the outside vibe near
               the fountain was great. Tons of flavor and great healthy
               options too.&rdquo;
@@ -542,10 +537,10 @@ export default function BabygirlPage() {
       <section
         id="menu"
         className="relative px-6 sm:px-10"
-        style={{ paddingTop: "clamp(80px, 10vw, 160px)", paddingBottom: "clamp(80px, 10vw, 160px)" }}
+        style={{ paddingTop: "clamp(64px, 10vw, 160px)", paddingBottom: "clamp(64px, 10vw, 160px)" }}
       >
         <div className="max-w-[1400px] mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-16 lg:gap-24">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-10 lg:gap-24">
             <div className="lg:sticky lg:top-24 lg:self-start">
               <SectionLabel>Menu</SectionLabel>
               <Reveal delay={0.1}>
@@ -557,7 +552,7 @@ export default function BabygirlPage() {
               </Reveal>
 
               <Reveal delay={0.15}>
-                <p className="text-[clamp(14px,1.1vw,16px)] font-light leading-[1.7] text-[#8a8580] mb-10 max-w-[360px]">
+                <p className="text-[clamp(14px,1.1vw,16px)] font-light leading-[1.7] text-[#8a8580] mb-8 sm:mb-10 max-w-[360px]">
                   Vegetable-forward plates, Southern comfort, and everything
                   in between. The menu moves with the seasons — what&apos;s here
                   today might be gone tomorrow.
@@ -566,17 +561,15 @@ export default function BabygirlPage() {
 
               <Reveal delay={0.2}>
                 <div className="flex flex-wrap gap-2">
-                  {(
-                    [
-                      { key: "brunch", label: "Brunch" },
-                      { key: "pm", label: "P.M. Menu" },
-                      { key: "drinks", label: "Drinks" },
-                    ] as const
-                  ).map(({ key, label }) => (
+                  {([
+                    { key: "brunch", label: "Brunch" },
+                    { key: "pm", label: "P.M. Menu" },
+                    { key: "drinks", label: "Drinks" },
+                  ] as const).map(({ key, label }) => (
                     <button
                       key={key}
                       onClick={() => setMenuTab(key)}
-                      className="px-5 py-2.5 text-[13px] font-medium rounded-full transition-all duration-300"
+                      className="px-5 py-3 text-[14px] sm:text-[13px] font-medium rounded-full transition-all duration-300 min-h-[48px] sm:min-h-0 sm:py-2.5"
                       style={{
                         background: menuTab === key ? "#1a1a1a" : "transparent",
                         color: menuTab === key ? "#FAF8F5" : "#8a8580",
@@ -590,12 +583,8 @@ export default function BabygirlPage() {
               </Reveal>
 
               <Reveal delay={0.3}>
-                <p className="text-[12px] text-[#8a8580] mt-6 leading-relaxed">
-                  {menuTab === "brunch"
-                    ? "Served Saturday & Sunday, 9 am — 4 pm"
-                    : menuTab === "pm"
-                      ? "Served Monday — Friday, 11 am — 4 pm"
-                      : "Available all day"}
+                <p className="text-[12px] text-[#8a8580] mt-4 sm:mt-6 leading-relaxed">
+                  {menuTab === "brunch" ? "Served Saturday & Sunday, 9 am — 4 pm" : menuTab === "pm" ? "Served Monday — Friday, 11 am — 4 pm" : "Available all day"}
                 </p>
               </Reveal>
             </div>
@@ -620,26 +609,15 @@ export default function BabygirlPage() {
       <section
         id="space"
         className="relative overflow-hidden"
-        style={{
-          background: "#1a1a1a",
-          paddingTop: "clamp(80px, 10vw, 160px)",
-          paddingBottom: "clamp(80px, 10vw, 160px)",
-        }}
+        style={{ background: "#1a1a1a", paddingTop: "clamp(64px, 10vw, 160px)", paddingBottom: "clamp(64px, 10vw, 160px)" }}
       >
         <div className="max-w-[1400px] mx-auto px-6 sm:px-10">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-16 lg:gap-24 items-center">
-            {/* Left — photo with parallax */}
-            <ParallaxImage
-              src="/images/interior-stained-glass.png"
-              alt="Floor-to-ceiling stained glass panels in yellow, orange, and chartreuse"
-            />
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-10 lg:gap-24 items-center">
+            <ParallaxImage src="/images/interior-stained-glass.png" alt="Floor-to-ceiling stained glass panels in yellow, orange, and chartreuse" />
 
-            {/* Right — text */}
             <div>
               <Reveal>
-                <p className="text-[11px] font-medium tracking-[0.3em] uppercase text-[#8a8580] mb-8">
-                  The Space
-                </p>
+                <p className="text-[11px] font-medium tracking-[0.3em] uppercase text-[#8a8580] mb-8">The Space</p>
               </Reveal>
               <Reveal delay={0.1}>
                 <h2 className="text-[clamp(28px,3.5vw,52px)] font-light leading-[1.1] tracking-[-0.03em] text-white mb-6">
@@ -675,9 +653,7 @@ export default function BabygirlPage() {
                     { number: "10", label: "at the bar" },
                   ].map((s) => (
                     <div key={s.label}>
-                      <p className="text-[clamp(28px,3vw,44px)] font-light text-[#C5D63D] tracking-[-0.03em]">
-                        {s.number}
-                      </p>
+                      <p className="text-[clamp(28px,3vw,44px)] font-light text-[#C5D63D] tracking-[-0.03em]">{s.number}</p>
                       <p className="text-[12px] text-white/40 mt-1">{s.label}</p>
                     </div>
                   ))}
@@ -689,19 +665,11 @@ export default function BabygirlPage() {
       </section>
 
       {/* ─── Second food photo ────────────────────────────── */}
-      <section className="px-6 sm:px-10" style={{ paddingTop: "clamp(60px, 8vw, 120px)", paddingBottom: "clamp(60px, 8vw, 120px)" }}>
+      <section className="px-6 sm:px-10" style={{ paddingTop: "clamp(48px, 8vw, 120px)", paddingBottom: "clamp(48px, 8vw, 120px)" }}>
         <div className="max-w-[1400px] mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <PhotoCard
-              src="/images/grit-bowl.png"
-              alt="Stone-ground grit bowl with fried eggs and braised greens"
-              index={0}
-            />
-            <PhotoCard
-              src="/images/hero-spread.jpg"
-              alt="Table spread with chicken and waffles, fresh flowers, granola bowl"
-              index={1}
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            <PhotoCard src="/images/grit-bowl.png" alt="Stone-ground grit bowl with fried eggs and braised greens" index={0} />
+            <PhotoCard src="/images/hero-spread.jpg" alt="Table spread with chicken and waffles, fresh flowers, granola bowl" index={1} />
           </div>
         </div>
       </section>
@@ -710,14 +678,10 @@ export default function BabygirlPage() {
       <section
         id="visit"
         className="relative px-6 sm:px-10"
-        style={{
-          paddingTop: "clamp(80px, 10vw, 160px)",
-          paddingBottom: "clamp(80px, 10vw, 160px)",
-          background: "#f0ece7",
-        }}
+        style={{ paddingTop: "clamp(64px, 10vw, 160px)", paddingBottom: "clamp(64px, 10vw, 160px)", background: "#f0ece7" }}
       >
         <div className="max-w-[1400px] mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-16 lg:gap-24">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-10 lg:gap-24">
             <div>
               <SectionLabel>Visit</SectionLabel>
               <Reveal delay={0.1}>
@@ -728,7 +692,7 @@ export default function BabygirlPage() {
                 </h2>
               </Reveal>
               <Reveal delay={0.15}>
-                <p className="text-[clamp(14px,1.1vw,16px)] font-light leading-[1.7] text-[#8a8580] mb-10 max-w-[420px]">
+                <p className="text-[clamp(14px,1.1vw,16px)] font-light leading-[1.7] text-[#8a8580] mb-8 sm:mb-10 max-w-[420px]">
                   Walk-ins only. No reservations, no pretense. Just show up,
                   grab a table, and let us feed you. Free parking in our
                   dedicated lot right out front.
@@ -738,9 +702,7 @@ export default function BabygirlPage() {
               <Reveal delay={0.2}>
                 <div className="space-y-8">
                   <div>
-                    <p className="text-[11px] font-medium tracking-[0.2em] uppercase text-[#8a8580] mb-3">
-                      Address
-                    </p>
+                    <p className="text-[11px] font-medium tracking-[0.2em] uppercase text-[#8a8580] mb-3">Address</p>
                     <a
                       href="https://maps.google.com/?q=2371+Hosea+L+Williams+Dr+SE+Atlanta+GA+30317"
                       target="_blank"
@@ -754,40 +716,33 @@ export default function BabygirlPage() {
                   </div>
 
                   <div>
-                    <p className="text-[11px] font-medium tracking-[0.2em] uppercase text-[#8a8580] mb-3">
-                      Hours
-                    </p>
+                    <p className="text-[11px] font-medium tracking-[0.2em] uppercase text-[#8a8580] mb-3">Hours</p>
                     {HOURS.map((h) => (
-                      <div
-                        key={h.day}
-                        className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between max-w-[400px] py-2 border-b border-[#ddd6ce]"
-                      >
-                        <span className="text-[clamp(14px,1.2vw,16px)] font-medium text-[#1a1a1a]">
-                          {h.day}
-                        </span>
-                        <div className="flex items-baseline gap-3">
-                          <span className="text-[clamp(14px,1.2vw,16px)] font-light text-[#5a5550]">
-                            {h.time}
-                          </span>
-                          {h.note && (
-                            <span className="text-[11px] text-[#9a8c5a] font-medium tracking-[0.05em]">
-                              {h.note}
-                            </span>
-                          )}
+                      <div key={h.day} className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between max-w-[400px] py-3 border-b border-[#ddd6ce]">
+                        <span className="text-[15px] sm:text-[clamp(14px,1.2vw,16px)] font-medium text-[#1a1a1a]">{h.day}</span>
+                        <div className="flex items-baseline gap-3 mt-1 sm:mt-0">
+                          <span className="text-[15px] sm:text-[clamp(14px,1.2vw,16px)] font-light text-[#5a5550]">{h.time}</span>
+                          {h.note && <span className="text-[11px] text-[#9a8c5a] font-medium tracking-[0.05em]">{h.note}</span>}
                         </div>
                       </div>
                     ))}
                   </div>
 
-                  <div>
-                    <p className="text-[11px] font-medium tracking-[0.2em] uppercase text-[#8a8580] mb-3">
-                      Call ahead
-                    </p>
+                  {/* Mobile-friendly action buttons */}
+                  <div className="flex flex-col sm:flex-row gap-3 pt-2">
                     <a
                       href="tel:+14045499692"
-                      className="text-[clamp(20px,2vw,28px)] font-light text-[#1a1a1a] hover:text-[#9a8c5a] transition-colors duration-300 tracking-[-0.02em]"
+                      className="inline-flex items-center justify-center gap-2 px-6 py-4 sm:py-3 rounded-full bg-[#1a1a1a] text-white text-[14px] font-medium hover:bg-[#2a2520] transition-colors duration-300 min-h-[48px]"
                     >
-                      (404) 549-9692
+                      Call (404) 549-9692
+                    </a>
+                    <a
+                      href="https://maps.google.com/?q=2371+Hosea+L+Williams+Dr+SE+Atlanta+GA+30317"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-2 px-6 py-4 sm:py-3 rounded-full border border-[#1a1a1a] text-[#1a1a1a] text-[14px] font-medium hover:bg-[#1a1a1a] hover:text-white transition-all duration-300 min-h-[48px]"
+                    >
+                      Get Directions
                     </a>
                   </div>
                 </div>
@@ -795,10 +750,10 @@ export default function BabygirlPage() {
             </div>
 
             <Reveal delay={0.3}>
-              <div className="relative w-full aspect-square lg:aspect-[4/3] rounded-2xl overflow-hidden bg-[#e8e4df]">
+              <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-[#e8e4df]">
                 <iframe
                   title="Babygirl location"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3317.5!2d-84.3087!3d33.7533!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzPCsDQ1JzExLjkiTiA4NMKwMTgnMzEuMyJX!5e0!3m2!1sen!2sus!4v1"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3318.1!2d-84.3117!3d33.7508!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88f5044e1c324e5d%3A0x2371!2s2371+Hosea+L+Williams+Dr+SE%2C+Atlanta%2C+GA+30317!5e0!3m2!1sen!2sus!4v1"
                   className="absolute inset-0 w-full h-full border-0 opacity-80"
                   style={{ filter: "saturate(0.3) contrast(1.1)" }}
                   loading="lazy"
@@ -812,19 +767,12 @@ export default function BabygirlPage() {
       </section>
 
       {/* ─── Footer ───────────────────────────────────────── */}
-      <footer
-        className="px-6 sm:px-10 py-16"
-        style={{ background: "#1a1a1a" }}
-      >
+      <footer className="px-6 sm:px-10 py-12 sm:py-16" style={{ background: "#1a1a1a" }}>
         <div className="max-w-[1400px] mx-auto">
-          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-8 mb-12">
+          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 sm:gap-8 mb-10 sm:mb-12">
             <div>
-              <p className="text-[clamp(32px,4vw,56px)] font-light tracking-[-0.03em] text-white leading-[1]">
-                babygirl
-              </p>
-              <p className="text-[14px] text-white/40 mt-3">
-                All day dining &middot; Cafe &middot; Restaurant &middot; Bar
-              </p>
+              <p className="text-[clamp(32px,4vw,56px)] font-light tracking-[-0.03em] text-white leading-[1]">babygirl</p>
+              <p className="text-[14px] text-white/40 mt-3">All day dining &middot; Cafe &middot; Restaurant &middot; Bar</p>
             </div>
             <a
               href="tel:+14045499692"
@@ -837,24 +785,12 @@ export default function BabygirlPage() {
           <div className="h-[1px] bg-white/10 mb-8" />
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <p className="text-[13px] text-white/30">
-              2371 Hosea L. Williams Dr SE, Suite C, Atlanta, GA 30317
-            </p>
-            <div className="flex items-center gap-6 text-[13px] text-white/40">
-              <a
-                href="https://www.instagram.com/babygirl.atl/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-white transition-colors duration-300"
-              >
+            <p className="text-[13px] text-white/30">2371 Hosea L. Williams Dr SE, Suite C, Atlanta, GA 30317</p>
+            <div className="flex items-center gap-8 sm:gap-6 text-[14px] sm:text-[13px] text-white/40 py-2">
+              <a href="https://www.instagram.com/babygirl.atl/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors duration-300 min-h-[44px] flex items-center">
                 Instagram
               </a>
-              <a
-                href="https://maps.google.com/?q=2371+Hosea+L+Williams+Dr+SE+Atlanta+GA+30317"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-white transition-colors duration-300"
-              >
+              <a href="https://maps.google.com/?q=2371+Hosea+L+Williams+Dr+SE+Atlanta+GA+30317" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors duration-300 min-h-[44px] flex items-center">
                 Directions
               </a>
             </div>
