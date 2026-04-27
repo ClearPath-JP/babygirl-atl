@@ -14,7 +14,3 @@ body {
 ::selection {
   background: rgba(197, 214, 61, 0.2);
 }
-
-.tabular-nums {
-  font-variant-numeric: tabular-nums;
-}
