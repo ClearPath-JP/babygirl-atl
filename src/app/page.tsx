@@ -250,6 +250,22 @@ function HamburgerIcon({ open }: { open: boolean }) {
   );
 }
 
+/* ─── Draw-line observer ─────────────────────────────────────── */
+function DrawLine({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { el.classList.add("drawn"); obs.disconnect(); } },
+      { threshold: 0.6 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return <span ref={ref} className={`text-draw-line ${className}`}>{children}</span>;
+}
+
 /* ─── Main Page ──────────────────────────────────────────────── */
 export default function BabygirlPage() {
   const [menuTab, setMenuTab] = useState<"brunch" | "pm" | "drinks">("brunch");
@@ -391,7 +407,7 @@ export default function BabygirlPage() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="text-[clamp(56px,10vw,140px)] font-light leading-[0.9] tracking-[-0.04em] text-white mb-6 sm:mb-8"
+            className="text-[clamp(56px,10vw,140px)] font-light leading-[0.9] tracking-[-0.04em] text-white mb-6 sm:mb-8 heading-breathe text-glow"
           >
             babygirl
           </motion.h1>
@@ -402,7 +418,7 @@ export default function BabygirlPage() {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="text-[clamp(16px,1.6vw,22px)] font-light text-white/80 max-w-[600px] leading-[1.5]"
           >
-            A calming neighborhood diner. Coffee early, food all day,
+            A calming neighborhood diner. <span className="text-key-light">Coffee early</span>, food all day,
             lights low when evening comes.
           </motion.p>
 
@@ -461,10 +477,10 @@ export default function BabygirlPage() {
             <div>
               <SectionLabel>About</SectionLabel>
               <Reveal delay={0.1}>
-                <h2 className="text-[clamp(32px,3.5vw,52px)] font-light leading-[1.1] tracking-[-0.03em] text-[#1a1a1a]">
+                <h2 className="text-[clamp(32px,3.5vw,52px)] font-light leading-[1.1] tracking-[-0.03em] text-[#1a1a1a] heading-breathe">
                   Good food.
                   <br />
-                  <span style={{ color: "#9a8c5a" }}>Real vibes.</span>
+                  <span className="text-gold">Real vibes.</span>
                 </h2>
               </Reveal>
             </div>
@@ -472,28 +488,28 @@ export default function BabygirlPage() {
             <div className="space-y-6">
               <Reveal delay={0.2}>
                 <p className="text-[clamp(15px,1.3vw,18px)] font-light leading-[1.8] text-[#4a4540]">
-                  Babygirl is what happens when a Michelin-recognized chef
+                  Babygirl is what happens when a <span className="text-key">Michelin-recognized chef</span>{" "}
                   builds a restaurant for his neighborhood instead of a
                   dining guide. Chef Hudson Rouse — the same hands behind
                   Whoopsie&apos;s, Rising Son, and Pure Quill Superette —
-                  wanted a place where East Lake could sit down, eat well,
-                  and not have to think too hard about it.
+                  wanted a place where East Lake could <span className="text-key">sit down, eat well,
+                  and not have to think too hard about it.</span>
                 </p>
               </Reveal>
               <Reveal delay={0.3}>
                 <p className="text-[clamp(15px,1.3vw,18px)] font-light leading-[1.8] text-[#4a4540]">
                   The menu changes with the seasons because the farms do.
-                  Three-ingredient biscuits — White Lily flour, butter,
-                  buttermilk, nothing else. Coffee pulled from Natural Born
+                  Three-ingredient biscuits — <span className="text-gold">White Lily flour, butter,
+                  buttermilk</span>, nothing else. Coffee pulled from Natural Born
                   Koffee single-varietal beans. Smash burgers made with
-                  Riverview Farms beef. Everything here is intentional, nothing
-                  is fussy.
+                  Riverview Farms beef. <DrawLine>Everything here is intentional, nothing
+                  is fussy.</DrawLine>
                 </p>
               </Reveal>
               <Reveal delay={0.4}>
                 <p className="text-[clamp(15px,1.3vw,18px)] font-light leading-[1.8] text-[#4a4540]">
-                  Named after his two daughters — because some things are
-                  just personal like that.
+                  Named after his two daughters — because <span className="text-amber font-medium">some things are
+                  just personal like that.</span>
                 </p>
               </Reveal>
 
@@ -522,12 +538,12 @@ export default function BabygirlPage() {
         <div className="max-w-[900px] mx-auto text-center">
           <Reveal>
             <blockquote className="text-[clamp(20px,3vw,40px)] font-light leading-[1.3] tracking-[-0.02em] text-[#2a2520]">
-              &ldquo;The space is really well done and the outside vibe near
-              the fountain was great. Tons of flavor and great healthy
+              &ldquo;The space is <span className="text-gold font-medium">really well done</span> and the outside vibe near
+              the fountain was great. <span className="text-key">Tons of flavor</span> and great healthy
               options too.&rdquo;
             </blockquote>
             <p className="text-[13px] text-[#8a8580] mt-6 tracking-[0.1em] uppercase">
-              — Google Review, 4.5 stars
+              — Google Review, <span className="text-chartreuse font-medium">4.5 stars</span>
             </p>
           </Reveal>
         </div>
@@ -553,9 +569,9 @@ export default function BabygirlPage() {
 
               <Reveal delay={0.15}>
                 <p className="text-[clamp(14px,1.1vw,16px)] font-light leading-[1.7] text-[#8a8580] mb-8 sm:mb-10 max-w-[360px]">
-                  Vegetable-forward plates, Southern comfort, and everything
-                  in between. The menu moves with the seasons — what&apos;s here
-                  today might be gone tomorrow.
+                  <span className="text-key">Vegetable-forward plates</span>, Southern comfort, and everything
+                  in between. The menu moves with the seasons — <span className="text-gold">what&apos;s here
+                  today might be gone tomorrow.</span>
                 </p>
               </Reveal>
 
@@ -628,10 +644,10 @@ export default function BabygirlPage() {
               </Reveal>
               <Reveal delay={0.2}>
                 <p className="text-[clamp(15px,1.3vw,18px)] font-light leading-[1.8] text-white/60 mb-8">
-                  The first thing you notice is the light. Floor-to-ceiling
-                  stained glass panels — chartreuse, amber, burnt orange, deep
+                  The first thing you notice is the light. <span className="text-key-light">Floor-to-ceiling
+                  stained glass panels</span> — <span className="text-chartreuse">chartreuse</span>, <span className="text-amber">amber</span>, burnt orange, deep
                   red — turn the dining room into something that feels like
-                  sitting inside a sunset. Designed by Claudhaus with a
+                  <span className="text-key-light">sitting inside a sunset.</span> Designed by Claudhaus with a
                   Danish-Japanese sensibility: light wood, clean lines,
                   and nothing that doesn&apos;t need to be there.
                 </p>
@@ -639,8 +655,8 @@ export default function BabygirlPage() {
               <Reveal delay={0.3}>
                 <p className="text-[clamp(15px,1.3vw,18px)] font-light leading-[1.8] text-white/60 mb-10">
                   In the morning it&apos;s bright and open — regulars with
-                  coffee, neighbors catching up. By afternoon the light
-                  shifts, the room warms, and it feels like you&apos;ve been
+                  coffee, neighbors catching up. By afternoon <span className="text-key-light">the light
+                  shifts, the room warms</span>, and it feels like you&apos;ve been
                   here for hours in the best way.
                 </p>
               </Reveal>
@@ -674,6 +690,40 @@ export default function BabygirlPage() {
         </div>
       </section>
 
+      {/* ─── Exterior / Neighborhood ─────────────────────── */}
+      <section className="relative px-6 sm:px-10" style={{ paddingTop: "clamp(48px, 8vw, 100px)", paddingBottom: "clamp(48px, 8vw, 100px)" }}>
+        <div className="max-w-[1400px] mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-10 lg:gap-20 items-center">
+            <Reveal>
+              <div className="aspect-[16/9] rounded-2xl overflow-hidden">
+                <img
+                  src="/images/exterior-building.jpg"
+                  alt="Babygirl exterior — black brick building with triangular roof in East Lake"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </Reveal>
+            <div>
+              <SectionLabel>The Neighborhood</SectionLabel>
+              <Reveal delay={0.1}>
+                <h2 className="text-[clamp(28px,3.5vw,48px)] font-light leading-[1.1] tracking-[-0.03em] text-[#1a1a1a] mb-6 heading-breathe">
+                  East Lake.
+                  <br />
+                  <span className="text-gold">Your corner spot.</span>
+                </h2>
+              </Reveal>
+              <Reveal delay={0.2}>
+                <p className="text-[clamp(15px,1.3vw,18px)] font-light leading-[1.8] text-[#4a4540]">
+                  Tucked into the <span className="text-key">Hosea + 2nd development</span> alongside
+                  Gene&apos;s and Poor Hendrix. <span className="text-gold">Free parking right out front.</span>{" "}
+                  No meter. No stress. Just pull up.
+                </p>
+              </Reveal>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ─── Visit ────────────────────────────────────────── */}
       <section
         id="visit"
@@ -693,8 +743,8 @@ export default function BabygirlPage() {
               </Reveal>
               <Reveal delay={0.15}>
                 <p className="text-[clamp(14px,1.1vw,16px)] font-light leading-[1.7] text-[#8a8580] mb-8 sm:mb-10 max-w-[420px]">
-                  Walk-ins only. No reservations, no pretense. Just show up,
-                  grab a table, and let us feed you. Free parking in our
+                  <span className="text-key">Walk-ins only.</span> No reservations, no pretense. Just show up,
+                  grab a table, and let us feed you. <span className="text-gold">Free parking</span> in our
                   dedicated lot right out front.
                 </p>
               </Reveal>
