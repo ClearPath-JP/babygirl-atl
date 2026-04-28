@@ -167,25 +167,6 @@ function PhotoCard({ src, alt, index }: { src: string; alt: string; index: numbe
   );
 }
 
-/* ─── Parallax image ─────────────────────────────────────────── */
-function ParallaxImage({ src, alt }: { src: string; alt: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], [40, -40]);
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, x: -40 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-      className="relative aspect-[4/3] rounded-2xl overflow-hidden"
-    >
-      <motion.img style={{ y }} src={src} alt={alt} className="w-[100%] h-[120%] object-cover" />
-    </motion.div>
-  );
-}
 
 /* ─── Menu item row ──────────────────────────────────────────── */
 function MenuItem({ item, index }: { item: { name: string; price: number; desc?: string }; index: number }) {
@@ -195,22 +176,23 @@ function MenuItem({ item, index }: { item: { name: string; price: number; desc?:
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: index * 0.05 }}
-      className="group"
     >
-      <div className="flex items-baseline justify-between gap-4 py-5 border-b border-[#e8e4df] transition-colors duration-300 group-hover:border-[#C5D63D]">
-        <div className="flex-1 min-w-0">
-          <h3 className="text-[clamp(16px,1.4vw,20px)] font-medium text-[#1a1a1a] tracking-[-0.01em]">
-            {item.name}
-          </h3>
-          {item.desc && (
-            <p className="text-[clamp(12px,1vw,14px)] text-[#8a8580] mt-1 leading-relaxed">
-              {item.desc}
-            </p>
-          )}
+      <div className="menu-item-row">
+        <div className="flex items-baseline justify-between gap-4 py-5 border-b border-[#e8e4df]">
+          <div className="flex-1 min-w-0">
+            <h3 className="menu-item-name text-[clamp(16px,1.4vw,20px)] font-medium text-[#1a1a1a] tracking-[-0.01em] transition-colors duration-300">
+              {item.name}
+            </h3>
+            {item.desc && (
+              <p className="text-[clamp(12px,1vw,14px)] text-[#8a8580] mt-1 leading-relaxed">
+                {item.desc}
+              </p>
+            )}
+          </div>
+          <span className="text-[clamp(14px,1.2vw,18px)] font-light text-[#1a1a1a] tabular-nums shrink-0">
+            ${item.price}
+          </span>
         </div>
-        <span className="text-[clamp(14px,1.2vw,18px)] font-light text-[#1a1a1a] tabular-nums shrink-0">
-          ${item.price}
-        </span>
       </div>
     </motion.div>
   );
@@ -308,7 +290,7 @@ export default function BabygirlPage() {
         className="fixed top-0 inset-x-0 z-50 backdrop-blur-md bg-[#FAF8F5]/80 border-b border-[#e8e4df]/60"
       >
         <div className="max-w-[1400px] mx-auto px-6 sm:px-10 h-16 flex items-center justify-between">
-          <a href="#top" className="text-[18px] font-medium tracking-[-0.02em] text-[#1a1a1a]">
+          <a href="#top" className="font-serif-display text-[20px] font-medium tracking-[-0.02em] text-[#1a1a1a]">
             babygirl
           </a>
 
@@ -320,7 +302,7 @@ export default function BabygirlPage() {
                 href={link.href}
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noopener noreferrer" : undefined}
-                className="hover:text-[#1a1a1a] transition-colors duration-300"
+                className="nav-link hover:text-[#1a1a1a] transition-colors duration-300"
               >
                 {link.label}
               </a>
@@ -407,7 +389,7 @@ export default function BabygirlPage() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="text-[clamp(56px,10vw,140px)] font-light leading-[0.9] tracking-[-0.04em] text-white mb-6 sm:mb-8 heading-breathe text-glow"
+            className="font-serif-display text-[clamp(56px,10vw,140px)] font-light leading-[0.9] tracking-[-0.04em] text-white mb-6 sm:mb-8 heading-breathe text-glow"
           >
             babygirl
           </motion.h1>
@@ -455,7 +437,7 @@ export default function BabygirlPage() {
       {/* ─── Photo Strip ─────────────────────────────────── */}
       <section
         className="px-6 sm:px-10"
-        style={{ paddingTop: "clamp(48px, 8vw, 120px)", paddingBottom: "clamp(32px, 5vw, 80px)" }}
+        style={{ paddingTop: "clamp(32px, 5vw, 80px)", paddingBottom: "clamp(32px, 5vw, 80px)" }}
       >
         <div className="max-w-[1400px] mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
@@ -489,7 +471,7 @@ export default function BabygirlPage() {
             <div>
               <SectionLabel>About</SectionLabel>
               <Reveal delay={0.1}>
-                <h2 className="text-[clamp(32px,3.5vw,52px)] font-light leading-[1.1] tracking-[-0.03em] text-[#1a1a1a] heading-breathe">
+                <h2 className="font-serif-display text-[clamp(32px,3.5vw,52px)] font-light leading-[1.1] tracking-[-0.03em] text-[#1a1a1a] heading-breathe">
                   Good food.
                   <br />
                   <span className="text-gold">Real vibes.</span>
@@ -565,7 +547,7 @@ export default function BabygirlPage() {
               options too.&rdquo;
             </blockquote>
             <p className="text-[13px] text-[#8a8580] mt-6 tracking-[0.1em] uppercase">
-              — Google Review, <span className="text-chartreuse font-medium">4.5 stars</span>
+              — Google Review, <span className="text-gold font-medium">4.5 stars</span>
             </p>
           </Reveal>
         </div>
@@ -592,7 +574,7 @@ export default function BabygirlPage() {
             <div className="lg:sticky lg:top-24 lg:self-start">
               <SectionLabel>Menu</SectionLabel>
               <Reveal delay={0.1}>
-                <h2 className="text-[clamp(28px,3.5vw,52px)] font-light leading-[1.1] tracking-[-0.03em] text-[#1a1a1a] mb-4">
+                <h2 className="font-serif-display text-[clamp(28px,3.5vw,52px)] font-light leading-[1.1] tracking-[-0.03em] text-[#1a1a1a] mb-4">
                   {greeting},
                   <br />
                   <span style={{ color: "#9a8c5a" }}>what are you having?</span>
@@ -617,7 +599,7 @@ export default function BabygirlPage() {
                     <button
                       key={key}
                       onClick={() => setMenuTab(key)}
-                      className="px-5 py-3 text-[14px] sm:text-[13px] font-medium rounded-full transition-all duration-300 min-h-[48px] sm:min-h-0 sm:py-2.5"
+                      className="menu-tab-btn px-5 py-3 text-[14px] sm:text-[13px] font-medium rounded-full min-h-[48px] sm:min-h-0 sm:py-2.5"
                       style={{
                         background: menuTab === key ? "#1a1a1a" : "transparent",
                         color: menuTab === key ? "#FAF8F5" : "#8a8580",
@@ -661,14 +643,37 @@ export default function BabygirlPage() {
       >
         <div className="max-w-[1400px] mx-auto px-6 sm:px-10">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-10 lg:gap-24 items-center">
-            <ParallaxImage src="/images/interior-stained-glass.png" alt="Floor-to-ceiling stained glass panels in yellow, orange, and chartreuse" />
+            {/* Decorative stained-glass bars — placeholder until interior photos */}
+            <Reveal>
+              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden flex items-end gap-3 p-8" style={{ background: "linear-gradient(160deg, #111 0%, #1a1a1a 100%)" }}>
+                <div className="absolute inset-0 opacity-[0.07]" style={{ background: "radial-gradient(ellipse at 30% 40%, #C5D63D 0%, transparent 60%)" }} />
+                {[
+                  { color: "#C5D63D", height: "70%", delay: 0 },
+                  { color: "#E8963D", height: "85%", delay: 0.1 },
+                  { color: "#D44E3C", height: "55%", delay: 0.2 },
+                  { color: "#9a8c5a", height: "90%", delay: 0.3 },
+                  { color: "#C5D63D", height: "65%", delay: 0.15 },
+                  { color: "#E8963D", height: "75%", delay: 0.25 },
+                ].map((bar, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ scaleY: 0 }}
+                    whileInView={{ scaleY: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1.2, delay: bar.delay + 0.3, ease: [0.22, 1, 0.36, 1] }}
+                    className="flex-1 rounded-t-full origin-bottom"
+                    style={{ height: bar.height, background: bar.color, opacity: 0.6 }}
+                  />
+                ))}
+              </div>
+            </Reveal>
 
             <div>
               <Reveal>
                 <p className="text-[11px] font-medium tracking-[0.3em] uppercase text-[#8a8580] mb-8">The Space</p>
               </Reveal>
               <Reveal delay={0.1}>
-                <h2 className="text-[clamp(28px,3.5vw,52px)] font-light leading-[1.1] tracking-[-0.03em] text-white mb-6">
+                <h2 className="font-serif-display text-[clamp(28px,3.5vw,52px)] font-light leading-[1.1] tracking-[-0.03em] text-white mb-6">
                   Light through
                   <br />
                   <span className="text-[#C5D63D]">stained glass</span>
@@ -715,10 +720,15 @@ export default function BabygirlPage() {
       {/* ─── Second food photo ────────────────────────────── */}
       <section className="px-6 sm:px-10" style={{ paddingTop: "clamp(48px, 8vw, 120px)", paddingBottom: "clamp(48px, 8vw, 120px)" }}>
         <div className="max-w-[1400px] mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-            <PhotoCard src="/images/grit-bowl.png" alt="Stone-ground grit bowl with fried eggs and braised greens" index={0} />
-            <PhotoCard src="/images/hero-spread.jpg" alt="Table spread with chicken and waffles, fresh flowers, granola bowl" index={1} />
-          </div>
+          <Reveal>
+            <div className="aspect-[21/9] rounded-2xl overflow-hidden">
+              <img
+                src="/images/grit-bowl.png"
+                alt="Stone-ground grit bowl with fried eggs and braised greens"
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-[1.2s] ease-out"
+              />
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -738,7 +748,7 @@ export default function BabygirlPage() {
             <div>
               <SectionLabel>The Neighborhood</SectionLabel>
               <Reveal delay={0.1}>
-                <h2 className="text-[clamp(28px,3.5vw,48px)] font-light leading-[1.1] tracking-[-0.03em] text-[#1a1a1a] mb-6 heading-breathe">
+                <h2 className="font-serif-display text-[clamp(28px,3.5vw,48px)] font-light leading-[1.1] tracking-[-0.03em] text-[#1a1a1a] mb-6 heading-breathe">
                   East Lake.
                   <br />
                   <span className="text-gold">Your corner spot.</span>
@@ -767,7 +777,7 @@ export default function BabygirlPage() {
             <div>
               <SectionLabel>Visit</SectionLabel>
               <Reveal delay={0.1}>
-                <h2 className="text-[clamp(28px,3.5vw,52px)] font-light leading-[1.1] tracking-[-0.03em] text-[#1a1a1a] mb-4">
+                <h2 className="font-serif-display text-[clamp(28px,3.5vw,52px)] font-light leading-[1.1] tracking-[-0.03em] text-[#1a1a1a] mb-4">
                   Pull up.
                   <br />
                   <span style={{ color: "#9a8c5a" }}>We saved you a seat.</span>
@@ -849,12 +859,18 @@ export default function BabygirlPage() {
       </section>
 
       {/* ─── Footer ───────────────────────────────────────── */}
-      <footer className="px-6 sm:px-10 py-12 sm:py-16" style={{ background: "#1a1a1a" }}>
-        <div className="max-w-[1400px] mx-auto">
+      <footer className="relative px-6 sm:px-10 py-12 sm:py-16 overflow-hidden" style={{ background: "#1a1a1a" }}>
+        {/* Moody gradient wash */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: "radial-gradient(ellipse at 20% 50%, rgba(197,214,61,0.04) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(154,140,90,0.05) 0%, transparent 40%)"
+        }} />
+
+        <div className="max-w-[1400px] mx-auto relative">
           <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 sm:gap-8 mb-10 sm:mb-12">
             <div>
-              <p className="text-[clamp(32px,4vw,56px)] font-light tracking-[-0.03em] text-white leading-[1]">babygirl</p>
+              <p className="font-serif-display text-[clamp(32px,4vw,56px)] font-light tracking-[-0.03em] text-white leading-[1]">babygirl</p>
               <p className="text-[14px] text-white/40 mt-3">All day dining &middot; Cafe &middot; Restaurant &middot; Bar</p>
+              <p className="text-[13px] text-white/25 mt-2 italic">A neighborhood spot. Named after his daughters.</p>
             </div>
             <a
               href="tel:+14045499692"
@@ -876,6 +892,10 @@ export default function BabygirlPage() {
                 Directions
               </a>
             </div>
+          </div>
+
+          <div className="mt-8 pt-6 border-t border-white/5">
+            <p className="text-[11px] text-white/20 tracking-[0.1em] uppercase">East Lake, Atlanta &middot; Est. 2026</p>
           </div>
         </div>
       </footer>

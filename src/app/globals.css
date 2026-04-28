@@ -10,6 +10,11 @@
   --muted: #8a8580;
 }
 
+/* ─── Serif display font ─────────────────────── */
+.font-serif-display {
+  font-family: var(--font-playfair), Georgia, serif;
+}
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
@@ -72,4 +77,69 @@ body {
 }
 .heading-breathe:hover {
   letter-spacing: 0.005em;
+}
+
+/* ─── Nav link underline grow ────────────────── */
+.nav-link {
+  position: relative;
+  display: inline-block;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  height: 1.5px;
+  width: 0;
+  background: var(--gold);
+  transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1), left 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-link:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+/* ─── Menu item hover ────────────────────────── */
+.menu-item-row {
+  position: relative;
+  transition: background-color 0.3s ease, padding-left 0.3s ease;
+  border-radius: 8px;
+  margin-left: -12px;
+  margin-right: -12px;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+.menu-item-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 12px;
+  bottom: 12px;
+  width: 3px;
+  background: var(--gold);
+  border-radius: 2px;
+  opacity: 0;
+  transform: scaleY(0);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.menu-item-row:hover {
+  background-color: #F5EFE6;
+}
+.menu-item-row:hover::before {
+  opacity: 1;
+  transform: scaleY(1);
+}
+.menu-item-row:hover .menu-item-name {
+  color: var(--gold);
+}
+
+/* ─── Menu tab button ────────────────────────── */
+.menu-tab-btn {
+  transition: background-color 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+              color 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.2s ease;
+}
+.menu-tab-btn:active {
+  transform: scale(0.97);
 }
