@@ -643,28 +643,17 @@ export default function BabygirlPage() {
       >
         <div className="max-w-[1400px] mx-auto px-6 sm:px-10">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-10 lg:gap-24 items-center">
-            {/* Decorative stained-glass bars — placeholder until interior photos */}
+            {/* Interior image — cropped tight with warm overlay to differentiate from hero */}
             <Reveal>
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden flex items-end gap-3 p-8" style={{ background: "linear-gradient(160deg, #111 0%, #1a1a1a 100%)" }}>
-                <div className="absolute inset-0 opacity-[0.07]" style={{ background: "radial-gradient(ellipse at 30% 40%, #C5D63D 0%, transparent 60%)" }} />
-                {[
-                  { color: "#C5D63D", height: "70%", delay: 0 },
-                  { color: "#E8963D", height: "85%", delay: 0.1 },
-                  { color: "#D44E3C", height: "55%", delay: 0.2 },
-                  { color: "#9a8c5a", height: "90%", delay: 0.3 },
-                  { color: "#C5D63D", height: "65%", delay: 0.15 },
-                  { color: "#E8963D", height: "75%", delay: 0.25 },
-                ].map((bar, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ scaleY: 0 }}
-                    whileInView={{ scaleY: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1.2, delay: bar.delay + 0.3, ease: [0.22, 1, 0.36, 1] }}
-                    className="flex-1 rounded-t-full origin-bottom"
-                    style={{ height: bar.height, background: bar.color, opacity: 0.6 }}
-                  />
-                ))}
+              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
+                <img
+                  src="/images/interior-stained-glass.png"
+                  alt="Warm light filtering through stained glass panels onto dining tables"
+                  className="w-full h-full object-cover object-[center_60%] scale-110"
+                />
+                <div className="absolute inset-0" style={{
+                  background: "linear-gradient(135deg, rgba(26,26,26,0.4) 0%, rgba(197,214,61,0.1) 50%, rgba(26,26,26,0.5) 100%)"
+                }} />
               </div>
             </Reveal>
 
