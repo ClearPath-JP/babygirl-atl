@@ -469,10 +469,22 @@ export default function BabygirlPage() {
       {/* ─── About ────────────────────────────────────────── */}
       <section
         id="about"
-        className="relative px-6 sm:px-10"
+        className="relative px-6 sm:px-10 overflow-hidden"
         style={{ paddingTop: "clamp(64px, 10vw, 160px)", paddingBottom: "clamp(64px, 10vw, 160px)" }}
       >
-        <div className="max-w-[1400px] mx-auto">
+        {/* Warm gradient wash to break up white space */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: "linear-gradient(135deg, rgba(197,214,61,0.04) 0%, transparent 40%, rgba(154,140,90,0.05) 70%, transparent 100%)"
+        }} />
+        {/* Decorative accent bar — echoes stained glass */}
+        <div className="absolute top-0 left-[10%] w-[1px] h-full opacity-[0.08]" style={{
+          background: "linear-gradient(to bottom, transparent, #C5D63D 30%, #E8963D 60%, #D44E3C 80%, transparent)"
+        }} />
+        <div className="absolute top-0 right-[15%] w-[1px] h-[60%] opacity-[0.06] hidden lg:block" style={{
+          background: "linear-gradient(to bottom, transparent, #9a8c5a 50%, transparent)"
+        }} />
+
+        <div className="max-w-[1400px] mx-auto relative">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-10 lg:gap-24 items-start">
             <div>
               <SectionLabel>About</SectionLabel>
@@ -482,6 +494,16 @@ export default function BabygirlPage() {
                   <br />
                   <span className="text-gold">Real vibes.</span>
                 </h2>
+              </Reveal>
+
+              {/* Visual filler — stained glass color blocks */}
+              <Reveal delay={0.3}>
+                <div className="hidden lg:flex gap-2 mt-12">
+                  <div className="w-3 h-24 rounded-full bg-[#C5D63D]/20" />
+                  <div className="w-3 h-20 rounded-full bg-[#E8963D]/15 mt-4" />
+                  <div className="w-3 h-16 rounded-full bg-[#D44E3C]/10 mt-2" />
+                  <div className="w-3 h-20 rounded-full bg-[#9a8c5a]/15 mt-6" />
+                </div>
               </Reveal>
             </div>
 
@@ -552,10 +574,20 @@ export default function BabygirlPage() {
       {/* ─── Menu ─────────────────────────────────────────── */}
       <section
         id="menu"
-        className="relative px-6 sm:px-10"
+        className="relative px-6 sm:px-10 overflow-hidden"
         style={{ paddingTop: "clamp(64px, 10vw, 160px)", paddingBottom: "clamp(64px, 10vw, 160px)" }}
       >
-        <div className="max-w-[1400px] mx-auto">
+        {/* Warm left-side accent panel */}
+        <div className="absolute top-0 left-0 w-[40%] h-full pointer-events-none opacity-[0.35] hidden lg:block" style={{
+          background: "linear-gradient(180deg, #f5f0ea 0%, #ede8e1 50%, #f5f0ea 100%)",
+          borderRadius: "0 60px 60px 0",
+        }} />
+        {/* Subtle corner orb */}
+        <div className="absolute bottom-[10%] left-[5%] w-[300px] h-[300px] rounded-full pointer-events-none opacity-[0.06]" style={{
+          background: "radial-gradient(circle, #C5D63D 0%, transparent 70%)"
+        }} />
+
+        <div className="max-w-[1400px] mx-auto relative">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-10 lg:gap-24">
             <div className="lg:sticky lg:top-24 lg:self-start">
               <SectionLabel>Menu</SectionLabel>
